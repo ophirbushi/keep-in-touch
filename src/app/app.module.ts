@@ -7,11 +7,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AppStorage } from './storage';
+import { FriendPage } from '../pages/friend/friend';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    FriendPage
   ],
   imports: [
     BrowserModule,
@@ -20,7 +22,8 @@ import { AppStorage } from './storage';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    FriendPage
   ],
   providers: [
     AppStorage,

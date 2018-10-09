@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Friend Details
+    </ion-title>
+    <div (click)="dismiss()" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+      Close
+    </div>
+  </ion-navbar>
+</ion-header>
+
+<ion-list>
+  <ion-item>
+    <ion-label>Name</ion-label>
+    <ion-input [(ngModel)]="friend.name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Frequency</ion-label>
+    <ion-select [(ngModel)]="friend.frequency">
+      <ion-option *ngFor="let freq of frequencies" [value]="freq">{{ freq }}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Phone</ion-label>
+    <ion-input [(ngModel)]="friend.phoneNumber"></ion-input>
+  </ion-item>
+</ion-list>
+
+<button ion-button block (click)="saveChanges()">Save Changes</button>

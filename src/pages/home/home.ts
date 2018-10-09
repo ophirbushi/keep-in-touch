@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AppStorage } from '../../app/storage';
+import { FriendPage } from '../friend/friend';
 
 @Component({
   selector: 'page-home',
@@ -9,17 +10,23 @@ import { AppStorage } from '../../app/storage';
 export class HomePage {
   friends: Friend[] = [];
 
-  constructor(public navCtrl: NavController, private storage: AppStorage) {
+  constructor(public navCtrl: NavController, private storage: AppStorage, private modalCtrl: ModalController) {
 
   }
 
   ngOnInit() {
-    debugger
     this.friends = this.storage.get();
   }
 
 
   onPlusClick() {
-    this.friends.push({ name: 'abc', phoneNumber: '123', frequency: '23months' })
+    const modal = this.modalCtrl.create(FriendPage);
+    modal.present();
+    modal.onDidDismiss(friend => {
+      if (friend) {
+        this.friends.push(friend);
+        this.storage.set(this.friends);
+      }
+    });
   }
 }
