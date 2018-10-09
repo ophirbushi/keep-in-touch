@@ -1,0 +1,7 @@
+{
+  "name": "keepInTouch",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
