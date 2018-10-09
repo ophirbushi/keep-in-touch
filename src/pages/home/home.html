@@ -7,8 +7,14 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <ion-list *ngIf="friends?.length">
+    <button ion-item *ngFor="let friend of friends">
+      {{ friend.name }}
+    </button>
+  </ion-list>
+
+  <div *ngIf="!friends?.length">Add Friends</div>
+  <ion-fab right bottom>
+    <button ion-fab (click)="onPlusClick()">+</button>
+  </ion-fab>
 </ion-content>
