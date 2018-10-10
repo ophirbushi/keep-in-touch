@@ -8,6 +8,8 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AppStorage } from './storage';
 import { FriendPage } from '../pages/friend/friend';
+import { LocalNotifications } from "@ionic-native/local-notifications";
+
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { FriendPage } from '../pages/friend/friend';
     FriendPage
   ],
   providers: [
+    LocalNotifications,
     AppStorage,
     StatusBar,
     SplashScreen,

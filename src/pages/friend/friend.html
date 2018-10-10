@@ -26,4 +26,6 @@
   </ion-item>
 </ion-list>
 
-<button ion-button block (click)="saveChanges()">Save Changes</button>
+<button ion-button block color="danger" (click)="delete()">Delete</button>
+
+<button ion-button block (click)="saveChanges()" [disabled]="!friend.name || !friend.frequency">Save Changes</button>

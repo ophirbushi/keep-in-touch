@@ -8,7 +8,7 @@
 
 <ion-content padding>
   <ion-list *ngIf="friends?.length">
-    <button ion-item *ngFor="let friend of friends">
+    <button ion-item *ngFor="let friend of friends; let i = index;" (click)="onFriendClick(i)">
       {{ friend.name }}
     </button>
   </ion-list>

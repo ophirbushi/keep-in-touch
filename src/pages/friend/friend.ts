@@ -23,7 +23,7 @@ export class FriendPage {
   constructor(private viewCtrl: ViewController) { }
 
   ngOnInit() {
-    this.friend = {
+    this.friend = this.viewCtrl.data || {
       frequency: null,
       name: null,
       phoneNumber: null
@@ -34,7 +34,11 @@ export class FriendPage {
     this.viewCtrl.dismiss();
   }
 
-  saveChanges(){
+  delete() {
+    this.viewCtrl.dismiss('delete');
+  }
+
+  saveChanges() {
     this.viewCtrl.dismiss(this.friend);
   }
 }
