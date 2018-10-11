@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { AppStorage } from './storage';
 import { FriendPage } from '../pages/friend/friend';
 import { LocalNotifications } from "@ionic-native/local-notifications";
+import { MockNotifications } from './mock-notifications';
 
 
 @NgModule({
@@ -28,11 +29,12 @@ import { LocalNotifications } from "@ionic-native/local-notifications";
     FriendPage
   ],
   providers: [
-    LocalNotifications,
+     LocalNotifications,
+    //{ provide: LocalNotifications, useClass: MockNotifications },
     AppStorage,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
-export class AppModule {}
+export class AppModule { }

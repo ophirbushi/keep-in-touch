@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { ViewController } from "ionic-angular";
+import { generateRandomNumber } from "../../app/generate-random-number";
 
 @Component({
   selector: 'friend-page',
@@ -23,7 +24,8 @@ export class FriendPage {
   constructor(private viewCtrl: ViewController) { }
 
   ngOnInit() {
-    this.friend = this.viewCtrl.data || {
+    this.friend = this.viewCtrl.data && this.viewCtrl.data['id'] != null ? this.viewCtrl.data : {
+      id: generateRandomNumber(),
       frequency: null,
       name: null,
       phoneNumber: null

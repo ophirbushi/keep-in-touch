@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+import { LocalNotifications, ILocalNotification, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications';
 import { AppStorage } from '../../app/storage';
 import { FriendPage } from '../friend/friend';
+import { generateRandomNumber } from '../../app/generate-random-number';
 
 @Component({
   selector: 'page-home',
@@ -22,6 +23,7 @@ export class HomePage {
     const modal = this.modalCtrl.create(FriendPage);
     modal.present();
     modal.onDidDismiss(friend => {
+      debugger
       if (!friend || friend === 'delete') return;
       this.friends.push(friend);
       this.onChanges();
@@ -46,15 +48,52 @@ export class HomePage {
   async onChanges() {
     this.storage.set(this.friends);
 
-    if (!await this.notifications.hasPermission()) {
-      alert('no permission');
-      return;
+    try {
+      const allNotifications = await this.notifications.getAll();
+
+      const toCancel = allNotifications.filter(n => this.friends.findIndex(f => f.id === n.data.id) === -1);
+      const toSchedule: ILocalNotification[] = [];
+
+      this.friends.forEach(friend => {
+        const matchingNotification = allNotifications.find(n => n.data.id === friend.id);
+
+        if (matchingNotification) {
+          if (matchingNotification.data.frequency === friend.frequency) return;
+          toCancel.push(matchingNotification);
+        }
+
+        let seconds: number;
+
+        switch (friend.frequency) {
+          case '23weeks':
+            seconds = 1404800;
+            break;
+          case '23months':
+            seconds = 5184000;
+            break;
+          case 'halfAYear':
+            seconds = 5184000 * 3;
+            break;
+          default:
+            seconds = 0;
+            break;
+        }
+
+        toSchedule.push({
+          text: 'This is a reminder to contact ' + friend.name,
+          data: friend,
+          vibrate: true,
+          trigger: <any>{ every: seconds }
+        });
+      });
+
+      this.notifications.schedule(toSchedule);
+
+      this.notifications.cancel(toCancel);
+
+    } catch (error) {
+      alert(error)
     }
 
-    const allNotifications = await this.notifications.getAllScheduled();
-
-    this.notifications.schedule({
-      text: 'abc'
-    })
   }
 }
