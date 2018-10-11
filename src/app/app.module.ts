@@ -29,8 +29,8 @@ import { MockNotifications } from './mock-notifications';
     FriendPage
   ],
   providers: [
-     LocalNotifications,
-    //{ provide: LocalNotifications, useClass: MockNotifications },
+    // LocalNotifications,
+    { provide: LocalNotifications, useClass: MockNotifications },
     AppStorage,
     StatusBar,
     SplashScreen,

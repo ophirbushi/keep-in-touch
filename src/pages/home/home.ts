@@ -47,11 +47,12 @@ export class HomePage {
 
   private async deleteFriend(index: number) {
     const friend = this.friends.splice(index, 1)[0];
+    this.storage.set(this.friends);
     if (friend == null) return;
     const allNotifications = await this.notifications.getAll();
-    const matchingNotifications = allNotifications.filter(n => n.data.id === friend.id);
-    this.notifications.cancel(matchingNotifications.map(n => n.id));
-    this.storage.set(this.friends);
+    const matchingNotification = allNotifications.find(n => n.data.id === friend.id);
+    if (matchingNotification == null) return;
+    this.notifications.cancel(matchingNotification.id);
   }
 
   private async editFriend(index: number, updated: Friend) {
@@ -59,7 +60,7 @@ export class HomePage {
     const allNotifications = await this.notifications.getAll();
     const matchingNotification = allNotifications.find(n => n.data.id === updated.id);
     if ((matchingNotification.data as Friend).frequency !== updated.frequency) {
-      this.notifications.cancel(matchingNotification);
+      this.notifications.cancel(matchingNotification.id);
     }
     this.scheduleNotification(updated);
     this.storage.set(this.friends);
@@ -67,6 +68,7 @@ export class HomePage {
 
   private scheduleNotification(friend: Friend) {
     this.notifications.schedule({
+      id: generateRandomNumber(),
       text: 'This is a reminder to contact ' + friend.name,
       data: friend,
       vibrate: true,

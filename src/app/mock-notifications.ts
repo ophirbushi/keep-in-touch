@@ -7,7 +7,7 @@ export class MockNotifications {
     return Promise.resolve(true);
   }
 
-  getAllScheduled(): Promise<any[]> {
+  getAll(): Promise<any[]> {
     return Promise.resolve(this.getMockNotifications());
   }
 
