@@ -24,8 +24,7 @@ export class HomePage {
     modal.present();
     modal.onDidDismiss(friend => {
       if (!friend || friend === 'delete') return;
-      this.friends.push(friend);
-      this.onChanges();
+      this.addFriend(friend);
     });
   }
 
@@ -35,64 +34,52 @@ export class HomePage {
     modal.present();
     modal.onDidDismiss(updated => {
       if (!updated) return;
-      if (updated === 'delete') {
-        this.friends.splice(index, 1);
-      } else {
-        this.friends[index] = updated;
-      }
-      this.onChanges();
+      if (updated === 'delete') this.deleteFriend(index);
+      else this.editFriend(index, updated);
     });
   }
 
-  async onChanges() {
+  private addFriend(friend: Friend) {
+    this.friends.push(friend);
+    this.scheduleNotification(friend);
     this.storage.set(this.friends);
+  }
 
-    try {
-      const allNotifications = await this.notifications.getAll();
+  private async deleteFriend(index: number) {
+    const friend = this.friends.splice(index, 1)[0];
+    if (friend == null) return;
+    const allNotifications = await this.notifications.getAll();
+    const matchingNotifications = allNotifications.filter(n => n.data.id === friend.id);
+    this.notifications.cancel(matchingNotifications.map(n => n.id));
+    this.storage.set(this.friends);
+  }
 
-      const toCancel = allNotifications.filter(n => this.friends.findIndex(f => f.id === n.data.id) === -1);
-      const toSchedule: ILocalNotification[] = [];
-
-      this.friends.forEach(friend => {
-        const matchingNotification = allNotifications.find(n => n.data.id === friend.id);
-
-        if (matchingNotification) {
-          if (matchingNotification.data.frequency === friend.frequency) return;
-          toCancel.push(matchingNotification);
-        }
-
-        let seconds: number;
-
-        switch (friend.frequency) {
-          case '23weeks':
-            seconds = 1404800;
-            break;
-          case '23months':
-            seconds = 5184000;
-            break;
-          case 'halfAYear':
-            seconds = 5184000 * 3;
-            break;
-          default:
-            seconds = 0;
-            break;
-        }
-
-        toSchedule.push({
-          text: 'This is a reminder to contact ' + friend.name,
-          data: friend,
-          vibrate: true,
-          trigger: <any>{ every: seconds }
-        });
-      });
-
-      this.notifications.schedule(toSchedule);
-
-      this.notifications.cancel(toCancel);
-
-    } catch (error) {
-      alert(error)
+  private async editFriend(index: number, updated: Friend) {
+    this.friends[index] = updated;
+    const allNotifications = await this.notifications.getAll();
+    const matchingNotification = allNotifications.find(n => n.data.id === updated.id);
+    if ((matchingNotification.data as Friend).frequency !== updated.frequency) {
+      this.notifications.cancel(matchingNotification);
     }
+    this.scheduleNotification(updated);
+    this.storage.set(this.friends);
+  }
 
+  private scheduleNotification(friend: Friend) {
+    this.notifications.schedule({
+      text: 'This is a reminder to contact ' + friend.name,
+      data: friend,
+      vibrate: true,
+      trigger: <any>{ every: this.getSecondsFromFrequency(friend.frequency) }
+    });
+  }
+
+  private getSecondsFromFrequency(frequency: Frequency): number {
+    switch (frequency) {
+      case '23weeks': return 1404800;
+      case '23months': return 5184000;
+      case 'halfAYear': return 5184000 * 3;
+      default: return 0;
+    }
   }
 }
