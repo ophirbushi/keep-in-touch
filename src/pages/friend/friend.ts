@@ -20,7 +20,7 @@ import { generateRandomNumber } from "../../app/generate-random-number";
 export class FriendPage {
   friend: Friend;
   count: number;
-  unit: 'days' | 'weeks' | 'months';
+  unit: 'minutes' | 'days' | 'weeks' | 'months';
 
   constructor(private viewCtrl: ViewController) { }
 

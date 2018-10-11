@@ -80,6 +80,9 @@ export class HomePage {
   private getSecondsFromFrequency(frequency: Frequency): number {
     let base: number = 0;
     switch (frequency.unit) {
+      case 'minutes':
+        base = 60;
+        break;
       case 'days':
         base = 86400;
         break;

@@ -1,6 +1,6 @@
 declare interface Frequency {
   count: number;
-  unit: 'days' | 'weeks' | 'months';
+  unit: 'minutes' | 'days' | 'weeks' | 'months';
 }
 
 declare interface Friend {

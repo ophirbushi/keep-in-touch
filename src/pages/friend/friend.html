@@ -18,7 +18,7 @@
     <ion-label>Every</ion-label>
     <ion-input [(ngModel)]="count" type="number" [value]="count" (ngModelChange)="onFrequencyChange()"></ion-input>
     <ion-select [(ngModel)]="unit" (ngModelChange)="onFrequencyChange()">
-      <ion-option *ngFor="let unit of ['days', 'weeks', 'months']">{{ unit }}</ion-option>
+      <ion-option *ngFor="let unit of ['minutes', 'days', 'weeks', 'months']">{{ unit }}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>
