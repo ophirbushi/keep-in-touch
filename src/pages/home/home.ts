@@ -23,7 +23,6 @@ export class HomePage {
     const modal = this.modalCtrl.create(FriendPage);
     modal.present();
     modal.onDidDismiss(friend => {
-      debugger
       if (!friend || friend === 'delete') return;
       this.friends.push(friend);
       this.onChanges();
