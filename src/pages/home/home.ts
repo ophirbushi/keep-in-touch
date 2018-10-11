@@ -57,13 +57,14 @@ export class HomePage {
 
   private async editFriend(index: number, updated: Friend) {
     this.friends[index] = updated;
+    this.storage.set(this.friends);
     const allNotifications = await this.notifications.getAll();
     const matchingNotification = allNotifications.find(n => n.data.id === updated.id);
-    if ((matchingNotification.data as Friend).frequency !== updated.frequency) {
+    if (!matchingNotification) return;
+    if (this.getSecondsFromFrequency(matchingNotification.data.frequency) !== this.getSecondsFromFrequency(updated.frequency)) {
       this.notifications.cancel(matchingNotification.id);
+      this.scheduleNotification(updated);
     }
-    this.scheduleNotification(updated);
-    this.storage.set(this.friends);
   }
 
   private scheduleNotification(friend: Friend) {
@@ -77,11 +78,18 @@ export class HomePage {
   }
 
   private getSecondsFromFrequency(frequency: Frequency): number {
-    switch (frequency) {
-      case '23weeks': return 1404800;
-      case '23months': return 5184000;
-      case 'halfAYear': return 5184000 * 3;
-      default: return 0;
+    let base: number = 0;
+    switch (frequency.unit) {
+      case 'days':
+        base = 86400;
+        break;
+      case 'weeks':
+        base = 604800;
+        break;
+      case 'months':
+        base = 2592000;
+        break;
     }
+    return base * frequency.count;
   }
 }

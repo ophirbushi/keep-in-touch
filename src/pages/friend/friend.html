@@ -15,9 +15,10 @@
     <ion-input [(ngModel)]="friend.name"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label>Frequency</ion-label>
-    <ion-select [(ngModel)]="friend.frequency">
-      <ion-option *ngFor="let freq of frequencies" [value]="freq">{{ freq }}</ion-option>
+    <ion-label>Every</ion-label>
+    <ion-input [(ngModel)]="count" type="number" [value]="count" (ngModelChange)="onFrequencyChange()"></ion-input>
+    <ion-select [(ngModel)]="unit" (ngModelChange)="onFrequencyChange()">
+      <ion-option *ngFor="let unit of ['days', 'weeks', 'months']">{{ unit }}</ion-option>
     </ion-select>
   </ion-item>
   <ion-item>

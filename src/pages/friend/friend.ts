@@ -19,17 +19,27 @@ import { generateRandomNumber } from "../../app/generate-random-number";
 })
 export class FriendPage {
   friend: Friend;
-  frequencies: Frequency[] = ['23weeks', '23months', 'halfAYear'];
+  count: number;
+  unit: 'days' | 'weeks' | 'months';
 
   constructor(private viewCtrl: ViewController) { }
 
   ngOnInit() {
     this.friend = this.viewCtrl.data && this.viewCtrl.data['id'] != null ? this.viewCtrl.data : {
       id: generateRandomNumber(),
-      frequency: null,
+      frequency: { count: 1, unit: 'days' },
       name: null,
       phoneNumber: null
     }
+
+    this.count = this.friend.frequency.count;
+    this.unit = this.friend.frequency.unit;
+
+    this.onFrequencyChange();
+  }
+
+  onFrequencyChange() {
+    this.friend.frequency = { count: this.count, unit: this.unit };
   }
 
   dismiss() {
